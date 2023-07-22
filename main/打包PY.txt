@@ -1,0 +1,7 @@
+Pyinstaller -F reverse_stock_main.py 打包exe
+
+Pyinstaller -F -w py_word.py 不帶控制檯的打包
+
+Pyinstaller -F -w -i chengzi.ico py_word.py 打包指定exe圖標打包
+
+pyinstaller --onefile --paths=../ getStockNewsRevenueToHtml_main.py
