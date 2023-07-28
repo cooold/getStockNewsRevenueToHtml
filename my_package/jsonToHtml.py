@@ -10,10 +10,7 @@ def jsonToHtml(ToHtmlJson, savePath,title, Market = True):
     if os.path.exists(savePath):
         file_operations.removeOldFile(savePath)
 
-    if(Market):
-        sortIndexOfStockDict(ToHtmlJson)
-    else:
-        sortNoIndexOfStockDict(ToHtmlJson)
+    sortIndexOfStockDict(ToHtmlJson)
     makeHtml(ToHtmlJson, savePath, title)
     
 uptitleHtml = file_operations.get_text('F:/dayWork_ver4/combine/addTitle_1.txt')
@@ -114,17 +111,16 @@ def  sortIndexOfStockDict(stockDict):
     lastMonth = date_calculator.get_previous_YearMonth()
     print('排序依照營收' + lastMonth[0])
 
+    #遍歷沒有營收 加入假資料置頂
+    for key, value in stockDictCopy.items():
+        if(len(value['monthlyRevenue']) < 1):
+             value['monthlyRevenue'].setdefault(lastMonth[0], {})['前期比較增減(%)'] = 1000000
+
     dayLookDictIndex = sorted((stockDictCopy.items()), key=lambda x: float(x[1]['monthlyRevenue'][lastMonth[0]]['前期比較增減(%)']), reverse=True)
 
     if(len(DictIndexHtml) !=0):
         DictIndexHtml.clear()
     for i in dayLookDictIndex:
         DictIndexHtml.append(i[0])
-
-def  sortNoIndexOfStockDict(stockDict):
-    global DictIndexHtml
-    if(len(DictIndexHtml) !=0):
-        DictIndexHtml.clear()
-    DictIndexHtml = list(range(len(stockDict)))
 
 

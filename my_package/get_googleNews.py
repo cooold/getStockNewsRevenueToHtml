@@ -19,7 +19,7 @@ class stockInfo():
     number = ""
     name = ""
     news = []
-    listedOrOtc = ''
+    #listedOrOtc = ''
     monthly_revenue = {
         '當月營收' : '0',
         '上月營收' : '0',
@@ -52,15 +52,15 @@ def GoogleWebcrawle(headers, stock):
     stockInfo.number = c[0]
     stockInfo.name = c[1]
 
-    if(len(c) >= 3):
-        stockInfo.listedOrOtc = c[2]
-    else:
-        stockInfo.listedOrOtc = '無市場資料'
+    #if(len(c) >= 3):
+    #    stockInfo.listedOrOtc = c[2]
+    #else:
+    #    stockInfo.listedOrOtc = '無市場資料'
 
     stockInfoList.append(copy.deepcopy(stockInfo))
     saveStockToJson['number'] = stockInfo.number
     saveStockToJson['name'] = stockInfo.name
-    saveStockToJson['市場'] = stockInfo.listedOrOtc
+    #saveStockToJson['市場'] = stockInfo.listedOrOtc
     url = googleNewsURL(c[0] + ' ' + c[1])
     request = base_webScraping.getRequests(headers, url)
 
@@ -120,49 +120,23 @@ def startGet(headers, all_twse_months, lookStocks):
         saveStockToJson['news'] = copy.deepcopy(saveStockNewsToJson)
         saveStockNewsToJson.clear()
 
-        if(stockInfo.listedOrOtc != '無市場資料'):
-            
-            #判斷上市還是上櫃
-            if(stockInfo.listedOrOtc == '市'):
-                #判斷國內外
-                if('KY' not in stockInfo.name):
-                    twseList = all_twse_months['twseList_sii_0']
-                else:
-                    twseList = all_twse_months['twseList_sii_1']
-            else:
-                #判斷國內外
-                if('KY' not in stockInfo.name):
-                    twseList = all_twse_months['twseList_otc_0']
-                else:
-                    twseList = all_twse_months['twseList_otc_1']
-
-            #整理公開資訊
-            for monthTime, twse in twseList.items():
-                want = twse[twse['公司 代號'] == stockInfo.number]
-                stockInfo.monthly_revenue['當月營收'] = str(want['當月營收'].values[0])
-                stockInfo.monthly_revenue['上月營收'] = str(want['上月營收'].values[0])
-                stockInfo.monthly_revenue['當月營收'] = str(want['當月營收'].values[0])
-                stockInfo.monthly_revenue['去年當月營收'] = str(want['去年當月營收'].values[0])
-                stockInfo.monthly_revenue['上月比較增減(%)'] = str(want['上月比較 增減(%)'].values[0])
-                stockInfo.monthly_revenue['去年同月增減(%)'] = str(want['去年同月 增減(%)'].values[0])
-                stockInfo.monthly_revenue['當月累計營收'] = str(want['當月累計營收'].values[0])
-                stockInfo.monthly_revenue['去年累計營收'] = str(want['去年累計營收'].values[0])
-                stockInfo.monthly_revenue['前期比較增減(%)'] = str(want['前期比較 增減(%)'].values[0])
-                stockMonthly_revenueList[monthTime] = copy.deepcopy(stockInfo.monthly_revenue)
-                
-        else:
-            stockInfo.monthly_revenue['當月營收'] = '0'
-            stockInfo.monthly_revenue['上月營收'] = '0'
-            stockInfo.monthly_revenue['當月營收'] = '0'
-            stockInfo.monthly_revenue['去年當月營收'] = '0'
-            stockInfo.monthly_revenue['上月比較增減(%)'] = '0'
-            stockInfo.monthly_revenue['去年同月增減(%)'] = '0'
-            stockInfo.monthly_revenue['當月累計營收'] = '0'
-            stockInfo.monthly_revenue['去年累計營收'] = '0'
-            stockInfo.monthly_revenue['前期比較增減(%)'] = '0'
-            stockMonthly_revenueList[0] = copy.deepcopy(stockInfo.monthly_revenue)
-
-    
+        #整理公開資訊 
+        #取出
+        for key, value in all_twse_months.items():
+            for monthTime, twse in value.items():
+                if not twse[twse['公司 代號'] == stockInfo.number].empty:
+                    want = twse[twse['公司 代號'] == stockInfo.number]
+                    stockInfo.monthly_revenue['當月營收'] = str(want['當月營收'].values[0])
+                    stockInfo.monthly_revenue['上月營收'] = str(want['上月營收'].values[0])
+                    stockInfo.monthly_revenue['當月營收'] = str(want['當月營收'].values[0])
+                    stockInfo.monthly_revenue['去年當月營收'] = str(want['去年當月營收'].values[0])
+                    stockInfo.monthly_revenue['上月比較增減(%)'] = str(want['上月比較 增減(%)'].values[0])
+                    stockInfo.monthly_revenue['去年同月增減(%)'] = str(want['去年同月 增減(%)'].values[0])
+                    stockInfo.monthly_revenue['當月累計營收'] = str(want['當月累計營收'].values[0])
+                    stockInfo.monthly_revenue['去年累計營收'] = str(want['去年累計營收'].values[0])
+                    stockInfo.monthly_revenue['前期比較增減(%)'] = str(want['前期比較 增減(%)'].values[0])
+                    stockMonthly_revenueList[monthTime] = copy.deepcopy(stockInfo.monthly_revenue)
+                    
         saveStockToJson['monthlyRevenue'] = copy.deepcopy(stockMonthly_revenueList)
         stockMonthly_revenueList.clear()
         saveStockListToJson[i] = copy.deepcopy(saveStockToJson)

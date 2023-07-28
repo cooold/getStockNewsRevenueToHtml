@@ -104,3 +104,33 @@ def sort_txt_by_first_value(file_path):
             sorted_file.write(line + '\n')
 
     print(f"已經排序：{file_path}")
+
+    #刪除資料夾內所有檔案
+    
+def delete_files_in_folder(folder_path):
+    # 檢查資料夾是否存在
+    if not os.path.exists(folder_path):
+        print(f"資料夾 {folder_path} 不存在。")
+        return
+
+    # 確認資料夾路徑是一個資料夾而不是檔案
+    if not os.path.isdir(folder_path):
+        print(f"{folder_path} 不是一個資料夾。")
+        return
+
+    # 列出資料夾中的所有檔案
+    files = os.listdir(folder_path)
+
+    # 刪除每個檔案
+    for file in files:
+        file_path = os.path.join(folder_path, file)
+        try:
+            if os.path.isfile(file_path):
+                os.remove(file_path)
+                print(f"已刪除檔案: {file_path}")
+            elif os.path.isdir(file_path):
+                print(f"跳過資料夾: {file_path}")
+            else:
+                print(f"未知類型的檔案: {file_path}")
+        except Exception as e:
+            print(f"無法刪除檔案 {file_path}: {e}")

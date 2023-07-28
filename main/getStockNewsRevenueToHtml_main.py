@@ -40,11 +40,12 @@ def main():
     #if(date_calculator.is_weekday(today)):
     #print('今日是平日')
 
-    get_goodinfoStockToText.getGoodinfoToRawText(global_headers, global_get_historicalHigh_URL, saveNewHistoricalHighPath, 'historicalHigh')
+    
+    get_goodinfoStockToText.getGoodinfoToRawText(global_headers, global_get_historicalHigh_URL, saveNewHistoricalHighPath)
     print('新增歷史新高個股資料')
     time.sleep(12)
 
-    get_goodinfoStockToText.getGoodinfoToRawText(global_headers, global_get_dayURL, lookPath, 'look')
+    get_goodinfoStockToText.getGoodinfoToRawText(global_headers, global_get_dayURL, lookPath)
     print('儲存每日個股資料')
     time.sleep(8)
 
@@ -73,7 +74,7 @@ def main():
 
     #google爬蟲
 
-    #HistoricalHigh 目前沒有營收
+    #HistoricalHigh
     HistoricalHighStocks = file_operations.get_textLines(historicalHighPath)
     HistoricalStocksNewsAndRevenue_dict = get_googleNews.startGet(global_headers, all_twse_monthsRevenue, HistoricalHighStocks)
     file_operations.dictToJson(HistoricalStocksNewsAndRevenue_dict, 'F:/dayWork_ver4/historicalHigh/' + today)
@@ -88,10 +89,12 @@ def main():
     observationStocksNewsAndRevenue_dict = get_googleNews.startGet(global_headers, all_twse_monthsRevenue, observationStocks)
     file_operations.dictToJson(observationStocksNewsAndRevenue_dict, 'F:/dayWork_ver4/observation/' + today)
 
+    
+
     #製作成html
     dayHistoricalHighStocks = file_operations.get_text('F:/dayWork_ver4/historicalHigh/' + today + '.json')
     dayHistoricalHighStocksJson = json.loads(dayHistoricalHighStocks)
-    jsonToHtml.jsonToHtml(dayHistoricalHighStocksJson, 'F:/dayWork_ver4/dayHtml/' + today + 'dayHistoricalHigh.html', today + 'dayHistoricalHigh', Market = False)
+    jsonToHtml.jsonToHtml(dayHistoricalHighStocksJson, 'F:/dayWork_ver4/dayHtml/' + today + 'dayHistoricalHigh.html', today + 'dayHistoricalHigh')
 
     dayLook = file_operations.get_text('F:/dayWork_ver4/look/' + today + '.json')
     dayLookJson = json.loads(dayLook)

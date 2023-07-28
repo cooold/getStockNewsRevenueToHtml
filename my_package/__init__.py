@@ -10,6 +10,7 @@ global_get_dayURL = file_operations.get_text('../data_web/要得網址.txt')
 global_get_InvestmentTrust_URL1 = file_operations.get_text('../data_web/投信第一日上市.txt')
 global_get_InvestmentTrust_URL2 = file_operations.get_text('../data_web/投信第一日上櫃.txt')
 global_get_historicalHigh_URL = file_operations.get_text('../data_web/歷史新高.txt')
+global_html_df_index = int(file_operations.get_text('../data_web/html_df_index.txt'))
 
 
 
